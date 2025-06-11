@@ -18,6 +18,7 @@ Monitorar a previsão do tempo duas vezes ao dia (às 08h e às 18h) nas cidades
 * id (integer, PK)
 * nome (string)
 * uf (string)
+* 
 2. Previsao
 * cidade (relation many-to-one → Cidade)
 * temperatura (float)
@@ -32,6 +33,7 @@ Monitorar a previsão do tempo duas vezes ao dia (às 08h e às 18h) nas cidades
 * Trigger: Agendamento programado para 08:00 e 18:00 diariamente.
 
 🔁 Fluxo Completo
+
 Etapa 1 – Verificação e Cadastro das Cidades
 1. Busca Cidade SP no Strapi GET /cidades?nome=Sao paulo
 2. Verifica se SP já está cadastrado
@@ -39,8 +41,10 @@ Etapa 1 – Verificação e Cadastro das Cidades
     * Cadastrar cidade SP
 4. Transforma os dados com nó "Nova cidade"
 (Repete o mesmo processo para RJ)
+
 Etapa 2 – Consolida as duas cidades
 1. Junta os dados das cidades no nó Id e nome
+   
 Etapa 3 – Consulta da Previsão
 1. Aguarda com Intervalo 1s (evita overload)
 2. Busca Previsão via Weatherstack (duas vezes, uma por cidade)
@@ -49,6 +53,7 @@ Etapa 3 – Consulta da Previsão
     * Define se é "bom para praia" (RJ apenas)
     * Converte timezone/data
 4. Cadastra Previsão no Strapi
+
 Etapa 4 – Notificação por Email
 1. Formata Dados Email
     * Monta mensagem com condição e temperatura
@@ -56,7 +61,7 @@ Etapa 4 – Notificação por Email
 2. Send Email
     * Envia resumo das duas cidades
 
-￼
+![file-NtmjTV9gcidtq3cUvZxX83](https://github.com/user-attachments/assets/38e64657-4a52-4c18-8437-16cd5c47803b)
 
 Exemplo de Notificação
 Olá! ☀️ Aqui está a previsão do tempo de hoje: São Paulo: Ensolarado, 27°C Rio de Janeiro: Parcialmente nublado, 30°C
