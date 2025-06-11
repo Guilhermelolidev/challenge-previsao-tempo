@@ -8,9 +8,9 @@
 * Atualize as credenciais da API Weatherstack e do seu Email SMTP
 
 2. Rodar API strapi
-Inicializar projeto strapi
-Copiar a pasta ./strapi/api/ na raiz do projeto
-Executar yarn develop ou npm run develop
+* Inicializar projeto strapi
+* Copiar a pasta ./strapi/api/ na raiz do projeto
+* Executar yarn develop ou npm run develop
 
 📘 Documentação – Desafio Strapi + n8n
 Projeto: Acompanhando o tempo em São Paulo e Rio de Janeiro
