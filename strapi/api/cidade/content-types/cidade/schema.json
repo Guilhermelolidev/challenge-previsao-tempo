@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cidades",
+  "info": {
+    "singularName": "cidade",
+    "pluralName": "cidades",
+    "displayName": "cidade"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "uf": {
+      "type": "string"
+    },
+    "previsaos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::previsao.previsao",
+      "mappedBy": "cidade"
+    }
+  }
+}

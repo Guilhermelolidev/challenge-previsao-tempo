@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "previsaos",
+  "info": {
+    "singularName": "previsao",
+    "pluralName": "previsaos",
+    "displayName": "previsao"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cidade": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cidade.cidade",
+      "inversedBy": "previsaos"
+    },
+    "temperatura": {
+      "type": "decimal"
+    },
+    "condicao": {
+      "type": "string",
+      "required": true
+    },
+    "data_coleta": {
+      "type": "datetime"
+    },
+    "fim_de_semana": {
+      "type": "string"
+    },
+    "bom_para_praia": {
+      "type": "string"
+    }
+  }
+}

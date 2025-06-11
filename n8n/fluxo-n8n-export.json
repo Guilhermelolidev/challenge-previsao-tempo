@@ -1,0 +1,615 @@
+{
+  "name": "Fluxo n8n previsão do tempo",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://competent-ball-017a4b868b.strapiapp.com/api/cidades?filters[nome][$eq]=Sao paulo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer d461f19697fd128fe5dc7d5a3d24f33b2bfcb9425ca962dc5bd7acc4602157c8166678c765fba94b5495fc040dcd8d386dc38121cbb19c801caf5f0ed26e37d9e247067b5f9c644d3f7ec6bbcd58b0989d39e33b37ee71939f3ee84d32ff8641c1bb8aad0865c8db81254a6979b78d35cd3a3afe619056881ace74149ebdc6b7"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -580,
+        160
+      ],
+      "id": "6fec4582-1c53-4ea6-94bc-94122f3128f2",
+      "name": "Busca Cidade SP no Strapi"
+    },
+    {
+      "parameters": {
+        "url": "https://competent-ball-017a4b868b.strapiapp.com/api/cidades?filters[nome][$eq]=Rio de janeiro",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer d461f19697fd128fe5dc7d5a3d24f33b2bfcb9425ca962dc5bd7acc4602157c8166678c765fba94b5495fc040dcd8d386dc38121cbb19c801caf5f0ed26e37d9e247067b5f9c644d3f7ec6bbcd58b0989d39e33b37ee71939f3ee84d32ff8641c1bb8aad0865c8db81254a6979b78d35cd3a3afe619056881ace74149ebdc6b7"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -580,
+        580
+      ],
+      "id": "631c2407-a996-4c4e-b59f-943c8bd1d18e",
+      "name": "Busca Cidade RJ no Strapi"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8d52774a-4816-4c64-be7d-a6b9c7c36295",
+              "leftValue": "={{ $json[\"data\"].length }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -380,
+        160
+      ],
+      "id": "477e29a5-c34d-45b1-8675-6a16533ecc1b",
+      "name": "Verifica se SP já ta cadastrado"
+    },
+    {
+      "parameters": {
+        "url": "=http://api.weatherstack.com/current?access_key=10746f15e4f4fe294f9bf84d08bd36f7&query={{ $json['data'].nome }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        620,
+        440
+      ],
+      "id": "484cbd42-12c6-400e-9801-27ac93b9fd57",
+      "name": "Buscar previsão",
+      "retryOnFail": false,
+      "maxTries": 2,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://competent-ball-017a4b868b.strapiapp.com/api/previsaos",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer d461f19697fd128fe5dc7d5a3d24f33b2bfcb9425ca962dc5bd7acc4602157c8166678c765fba94b5495fc040dcd8d386dc38121cbb19c801caf5f0ed26e37d9e247067b5f9c644d3f7ec6bbcd58b0989d39e33b37ee71939f3ee84d32ff8641c1bb8aad0865c8db81254a6979b78d35cd3a3afe619056881ace74149ebdc6b7"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": {\n    \"cidade\": {{$json.data.cidade}},\n    \"temperatura\": {{$json.data.temperatura}},\n    \"condicao\": \"{{$json.data.condicao}}\",\n    \"data_coleta\": \"{{$json.data.data_coleta}}\",\n    \"fim_de_semana\": \"{{$json.data.fim_de_semana}}\",\n    \"bom_para_praia\":\"{{$json.data.bom_para_praia}}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        440
+      ],
+      "id": "2ecd0aca-8cd2-48df-8c33-8389aadda516",
+      "name": "Cadastrar previsão"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://competent-ball-017a4b868b.strapiapp.com/api/cidades",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer d461f19697fd128fe5dc7d5a3d24f33b2bfcb9425ca962dc5bd7acc4602157c8166678c765fba94b5495fc040dcd8d386dc38121cbb19c801caf5f0ed26e37d9e247067b5f9c644d3f7ec6bbcd58b0989d39e33b37ee71939f3ee84d32ff8641c1bb8aad0865c8db81254a6979b78d35cd3a3afe619056881ace74149ebdc6b7"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": {\n    \"nome\": \"Sao paulo\"\n  }\n}\n",
+        "options": {
+          "response": {}
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -200,
+        360
+      ],
+      "id": "23e9a01b-c59c-429e-8128-40386206942e",
+      "name": "Cadastrar cidade",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "0 18 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -820,
+        380
+      ],
+      "id": "311aa312-64bf-40ee-b4eb-3c3d2b466cc2",
+      "name": "Agendamento 08:00/18:00",
+      "notes": "Disparando as requests"
+    },
+    {
+      "parameters": {
+        "jsCode": "const cadastrarCidade = $('Cadastrar cidade').all()[0]?.json?.data;\n\nconst id = cadastrarCidade?.id;\nconst nome = cadastrarCidade?.nome;\n\nreturn [\n  {\n    \"data\": {\n      id,\n      nome\n    }\n  }\n]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -20,
+        360
+      ],
+      "id": "5c080874-9bae-4395-9229-4a4064b3fecd",
+      "name": "Nova cidade"
+    },
+    {
+      "parameters": {
+        "jsCode": "const jaCadastradoData = $('Verifica se SP já ta cadastrado').all()[0]?.json?.data;\n\nconst jaCadastrado = jaCadastradoData?.[0];\n\nconst id = jaCadastrado?.id;\nconst nome = jaCadastrado?.nome;\n\nreturn [\n  {\n    \"data\": {\n      id,\n      nome\n    }\n  }\n]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        160
+      ],
+      "id": "7fc7b0d3-3652-45b8-9840-2aad1757eea2",
+      "name": "Cidade ja existe"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        300,
+        440
+      ],
+      "id": "bad1d715-14a4-4951-8108-ba6ed1e1353a",
+      "name": "Id e nome"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8d52774a-4816-4c64-be7d-a6b9c7c36295",
+              "leftValue": "={{ $json[\"data\"].length }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -380,
+        580
+      ],
+      "id": "61abda2a-43d9-4d62-85c0-6b8b60dca455",
+      "name": "Verifica se RJ ta cadastrado"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://competent-ball-017a4b868b.strapiapp.com/api/cidades",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer d461f19697fd128fe5dc7d5a3d24f33b2bfcb9425ca962dc5bd7acc4602157c8166678c765fba94b5495fc040dcd8d386dc38121cbb19c801caf5f0ed26e37d9e247067b5f9c644d3f7ec6bbcd58b0989d39e33b37ee71939f3ee84d32ff8641c1bb8aad0865c8db81254a6979b78d35cd3a3afe619056881ace74149ebdc6b7"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": {\n    \"nome\": \"Rio de janeiro\"\n  }\n}\n",
+        "options": {
+          "response": {}
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -200,
+        760
+      ],
+      "id": "a38ceba2-3acd-4cf7-8f1d-ac5676af3ce4",
+      "name": "Cadastrar RJ",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const cadastrarCidade = $('Cadastrar RJ').all()[0]?.json?.data;\n\nconst id = cadastrarCidade?.id;\nconst nome = cadastrarCidade?.nome;\n\nreturn [\n  {\n    \"data\": {\n      id,\n      nome\n    }\n  }\n]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -20,
+        760
+      ],
+      "id": "7fe00d96-cdb9-4e4b-a59a-6cc9063d6355",
+      "name": "Nova cidade RJ"
+    },
+    {
+      "parameters": {
+        "jsCode": "const jaCadastradoData = $('Verifica se RJ ta cadastrado').all()[0]?.json?.data;\n\nconst jaCadastrado = jaCadastradoData?.[0];\n\nconst id = jaCadastrado?.id;\nconst nome = jaCadastrado?.nome;\n\nreturn [\n  {\n    \"data\": {\n      id,\n      nome\n    }\n  }\n]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        580
+      ],
+      "id": "1f5eb9a4-6d2d-4a29-8e14-3b0029de9a1d",
+      "name": "Cidade já existe"
+    },
+    {
+      "parameters": {
+        "fromEmail": "guilhermeloli.dev@gmail.com",
+        "toEmail": "guilhermeloli.dev@gmail.com",
+        "subject": "Previsão do Tempo - São Paulo & RJ",
+        "emailFormat": "text",
+        "text": "={{$json.data.mensagemEmail}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1360,
+        440
+      ],
+      "id": "252cbe7c-4797-43ac-9c11-bce989b0741c",
+      "name": "Send Email",
+      "webhookId": "a7fb4553-dc38-4695-8d23-eedc788cae58",
+      "executeOnce": false,
+      "credentials": {
+        "smtp": {
+          "id": "mMhtWTzpPllvHGcP",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega os dados da previsão do input\nconst dadosPrevisao = $('Cadastrar previsão').all()[0].json;\n\n// Monta a mensagem base\nlet mensagem = \"Olá! ☀️\\n\\nAqui está a previsão do tempo de hoje:\\n\\n\";\n\n// Verifica se o campo bom_para_praia é null (indica SP)\nif (dadosPrevisao.data.bom_para_praia === \"\") {\n  mensagem += `São Paulo: ${dadosPrevisao.data.condicao}, ${dadosPrevisao.data.temperatura}°C\\n\\n`;\n} else {\n  // Caso contrário, mostra RJ\n  mensagem += `Rio de Janeiro: ${dadosPrevisao.data.condicao}, ${dadosPrevisao.data.temperatura}°C\\n\\n`;\n}\n\n// Adiciona a info do fim de semana (bom para praia)\nmensagem += dadosPrevisao.data.bom_para_praia === \"\" ? \"\": `Fim de semana está bom para praia? ${dadosPrevisao.data.bom_para_praia ?? \"Não\"}`;\n\nreturn [\n  {\n    \"data\": {\n      mensagemEmail: mensagem\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1180,
+        440
+      ],
+      "id": "947279dc-df8d-4a4a-bc55-a12929783009",
+      "name": "Formata Dados Email"
+    },
+    {
+      "parameters": {
+        "jsCode": "const dadosPrevisao = $('Buscar previsão').all()[0].json;\nconst dadosCidade = $('Id e nome').all()[0].json.data;\nconst now = new Date();\nconst dataColeta = new Date(dadosPrevisao.location.localtime);\nnow.setHours(dataColeta.getHours() + 3);\nconst novaData = now.toISOString();\n\nconst dia = dataColeta.getDay(); // 0 = domingo, 6 = sábado\nconst fimDeSemana = (dia === 0 || dia === 6) ? \"Sim\" : \"Não\";\n\nconst codesBomPraia = [113, 116];\nconst codesRuimPraia = [\n  395, 392, 389, 386, 377, 374, 371, 368, 365, 362,\n  359, 356, 353, 350, 338, 335, 332, 329, 326, 323,\n  320, 317, 314, 311, 308, 305, 302, 299, 296, 293,\n  284, 281, 266, 263, 260, 248, 230, 227, 200, 185,\n  182, 179, 176, 143, 119, 122\n];\n\nconst weatherCode = dadosPrevisao.current.weather_code;\nconst temp = dadosPrevisao.current.temperature;\n\nlet bomPraPraia = \"Não\";\n\nif (fimDeSemana === \"Sim\" && temp >= 25) {\n  if (codesBomPraia.includes(weatherCode)) {\n    bomPraPraia = \"Sim\";\n  }\n  if (codesRuimPraia.includes(weatherCode)) {\n    bomPraPraia = \"Não\"; // sobrescreve apenas se não for bom\n  }\n}\n\nreturn [\n  {\n    data: {\n      cidade: dadosCidade.id - 1,\n      temperatura: dadosPrevisao.current.temperature,\n      condicao: dadosPrevisao.current.weather_descriptions[0],\n      data_coleta: novaData,\n      fim_de_semana: dadosCidade.nome === \"Sao paulo\" ? null : fimDeSemana,\n      bom_para_praia: dadosCidade.nome === \"Sao paulo\" ? null : bomPraPraia\n    }\n  }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        440
+      ],
+      "id": "29f97b9d-678a-479f-b34f-4557fdf2ca69",
+      "name": "Formata Dados Cadastro"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        460,
+        440
+      ],
+      "id": "c13fd0b1-9aaf-4736-9213-952865880bc5",
+      "name": "Intervalo 1s",
+      "webhookId": "51aa7a52-f3a0-4af8-9eed-8824061595f1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Busca Cidade SP no Strapi": {
+      "main": [
+        [
+          {
+            "node": "Verifica se SP já ta cadastrado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica se SP já ta cadastrado": {
+      "main": [
+        [
+          {
+            "node": "Cidade ja existe",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cadastrar cidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar previsão": {
+      "main": [
+        [
+          {
+            "node": "Formata Dados Cadastro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendamento 08:00/18:00": {
+      "main": [
+        [
+          {
+            "node": "Busca Cidade SP no Strapi",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Busca Cidade RJ no Strapi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastrar cidade": {
+      "main": [
+        [
+          {
+            "node": "Nova cidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cidade ja existe": {
+      "main": [
+        [
+          {
+            "node": "Id e nome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova cidade": {
+      "main": [
+        [
+          {
+            "node": "Id e nome",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Id e nome": {
+      "main": [
+        [
+          {
+            "node": "Intervalo 1s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca Cidade RJ no Strapi": {
+      "main": [
+        [
+          {
+            "node": "Verifica se RJ ta cadastrado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica se RJ ta cadastrado": {
+      "main": [
+        [
+          {
+            "node": "Cidade já existe",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cadastrar RJ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastrar RJ": {
+      "main": [
+        [
+          {
+            "node": "Nova cidade RJ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nova cidade RJ": {
+      "main": [
+        [
+          {
+            "node": "Id e nome",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Cidade já existe": {
+      "main": [
+        [
+          {
+            "node": "Id e nome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastrar previsão": {
+      "main": [
+        [
+          {
+            "node": "Formata Dados Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata Dados Email": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata Dados Cadastro": {
+      "main": [
+        [
+          {
+            "node": "Cadastrar previsão",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intervalo 1s": {
+      "main": [
+        [
+          {
+            "node": "Buscar previsão",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5cca957a-5085-4be8-a3b7-8cdc52ed3946",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1cf81ff929b0f3a90975c2d98fa67b9cd615001d18e38edddfa8f17e98d2843c"
+  },
+  "id": "n3YCEMoefgmrqAvH",
+  "tags": []
+}
