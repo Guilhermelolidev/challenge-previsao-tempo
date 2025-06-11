@@ -76,3 +76,7 @@ Etapa 4 – Notificação por Email
 Exemplo de Notificação
 Olá! ☀️ Aqui está a previsão do tempo de hoje: São Paulo: Ensolarado, 27°C Rio de Janeiro: Parcialmente nublado, 30°C
 Fim de semana: Bom para praia no RJ? ✅ Sim
+
+Ideias de funcionalidades futuras que fariam sentido: (não deu pra implementar devido a limitação do tempo)
+- Envio de notificações personalizadas via WhatsApp (canal de comunicação mais utilizado)
+- Painel visual em tempo real com gráficos de temperatura e probabilidade de chuva (via Chart.js no frontend).
