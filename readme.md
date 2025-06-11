@@ -1,9 +1,22 @@
-📘 Documentação – Live Challenge Strapi + n8n
+🔁 Como rodar localmente
+
+1. Importar o fluxo no n8n
+Acesse seu n8n local em http://localhost:5678
+Clique em "Import" no canto superior direito
+Importe o arquivo:
+./n8n/fluxo-n8n-export.json
+Atualize as credenciais da API Weatherstack e do seu Email SMTP
+
+2. Rodar API strapi
+Inicializar projeto strapi
+Copiar a pasta ./strapi/api/ na raiz do projeto
+Executar yarn develop ou npm run develop
+
+📘 Documentação – Desafio Strapi + n8n
 Projeto: Acompanhando o tempo em São Paulo e Rio de Janeiro
 
 🧠 Visão Geral
 Monitorar a previsão do tempo duas vezes ao dia (às 08h e às 18h) nas cidades de São Paulo e Rio de Janeiro, armazenar os dados no Strapi e gerar notificações automatizadas com um resumo das condições climáticas e se é um bom final de semana para ir à praia no RJ.
-
 
 🛠️ Tecnologias Utilizadas
 * Strapi – CMS headless usado como backend para armazenar e servir dados das previsões.
@@ -11,14 +24,13 @@ Monitorar a previsão do tempo duas vezes ao dia (às 08h e às 18h) nas cidades
 * Weatherstack API – API usada para buscar as previsões climáticas em tempo real.
 * Email (SMTP) – Canal de notificação escolhido para envio do resumo.
 
-
 🧱 Modelagem de Dados (Strapi)
-📄 Collection Types:
+
 1. Cidade
 * id (integer, PK)
 * nome (string)
 * uf (string)
-* 
+  
 2. Previsao
 * cidade (relation many-to-one → Cidade)
 * temperatura (float)
@@ -29,10 +41,8 @@ Monitorar a previsão do tempo duas vezes ao dia (às 08h e às 18h) nas cidades
 
 🔄 Automação com n8n
 
-📅 Disparador
+Disparador
 * Trigger: Agendamento programado para 08:00 e 18:00 diariamente.
-
-🔁 Fluxo Completo
 
 Etapa 1 – Verificação e Cadastro das Cidades
 1. Busca Cidade SP no Strapi GET /cidades?nome=Sao paulo
@@ -66,7 +76,3 @@ Etapa 4 – Notificação por Email
 Exemplo de Notificação
 Olá! ☀️ Aqui está a previsão do tempo de hoje: São Paulo: Ensolarado, 27°C Rio de Janeiro: Parcialmente nublado, 30°C
 Fim de semana: Bom para praia no RJ? ✅ Sim
-
-
-
-
