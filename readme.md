@@ -1,11 +1,11 @@
 🔁 Como rodar localmente
 
 1. Importar o fluxo no n8n
-Acesse seu n8n local em http://localhost:5678
-Clique em "Import" no canto superior direito
-Importe o arquivo:
+* Acesse seu n8n local em http://localhost:5678
+* Clique em "Import" no canto superior direito
+* Importe o arquivo:
 ./n8n/fluxo-n8n-export.json
-Atualize as credenciais da API Weatherstack e do seu Email SMTP
+* Atualize as credenciais da API Weatherstack e do seu Email SMTP
 
 2. Rodar API strapi
 Inicializar projeto strapi
